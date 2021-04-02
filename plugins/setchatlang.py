@@ -1,5 +1,10 @@
 from pyrogram import Client, filters
-from pyrogram.types import Message, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import (
+    Message,
+    CallbackQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+)
 
 from config import prefix
 from utils import require_admin
@@ -10,6 +15,7 @@ from localization import (
     get_locale_string,
     default_language,
 )
+
 
 def gen_langs_kb():
     langs = list(langdict)
@@ -36,7 +42,9 @@ def gen_langs_kb():
     return kb
 
 
-@Client.on_message(filters.command(["setchatlang", "config", "setlang"], prefix) & filters.group)
+@Client.on_message(
+    filters.command(["setchatlang", "config", "setlang"], prefix) & filters.group
+)
 @require_admin()
 @use_chat_lang()
 async def changelang(c: Client, m: Message, strings):
@@ -46,9 +54,10 @@ async def changelang(c: Client, m: Message, strings):
         ]
     )
     await m.reply_text("select the language", reply_markup=keyboard)
-    
+
+
 @Client.on_callback_query(filters.regex("^set_group_lang "))
-@require_admin() # need to add support for CallbackQuery
+@require_admin()  # need to add support for CallbackQuery
 @use_chat_lang()
 async def set_group_lang(c: Client, m: CallbackQuery, strings):
     lang = m.data.split()[1]
